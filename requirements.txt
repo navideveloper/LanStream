@@ -1,6 +1,6 @@
-flask
 mss
 numpy
 opencv-python
 pynput
-flet
+asyncio
+aiohttp

@@ -1,18 +1,6 @@
-import socket
 import cv2
 import numpy as np
-from . import config
-
-def get_local_ip():
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    try:
-        s.connect(("8.8.8.8", 80))
-        ip = s.getsockname()[0]
-    except Exception:
-        ip = "127.0.0.1"
-    finally:
-        s.close()
-    return ip
+from stream import config
 
 def load_cursor(path="assets/cursor.png", size=config.CURSOR_SIZE):
     img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
