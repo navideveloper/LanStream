@@ -1,8 +1,11 @@
 import cv2
 import numpy as np
 from stream import config
+import socket
 
-def load_cursor(path="assets/cursor.png", size=config.CURSOR_SIZE):
+def load_cursor():
+    path=f"assets/{config.CURSOR}"
+    size=config.CURSOR_SIZE
     img = cv2.imread(path, cv2.IMREAD_UNCHANGED)
     if img is None:
         img = np.zeros((size, size, 4), dtype=np.uint8)
@@ -32,3 +35,15 @@ def overlay_image(bg, fg, x, y):
     bg[y1:y2, x1:x2] = (alpha_fg * fg_crop[:, :, :3] +
                         alpha_bg * bg_crop).astype(np.uint8)
     return bg
+
+def get_local_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't have to be reachable, just used to select the right interface
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = "127.0.0.1"
+    finally:
+        s.close()
+    return ip
