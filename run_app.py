@@ -47,6 +47,15 @@ class ModernContainer(ft.Container):
         self.expand=True
         self.animate = ft.Animation(300, ft.AnimationCurve.EASE_OUT)
 
+class App(ft.Container):
+    def __init__(self,content):
+        super().__init__()
+        self.content = content
+        self.padding=ft.Padding.all(25)
+        self.alignment=ft.Alignment.TOP_CENTER
+        self.bgcolor="#121212"
+
+
 primary_color="#467C6F"
 
 def main(page: ft.Page):
@@ -59,10 +68,9 @@ def main(page: ft.Page):
     page.padding = 0
     page.theme_mode = ft.ThemeMode.DARK
     page.bgcolor = '#121212'
-    
+    page.window.icon = 'icon.ico'
     page.run_task(stream_server)
     page.run_task(streamer.capture_loop)
-    
     
     # Status indicator
     status_indicator = ft.Row([
@@ -219,7 +227,7 @@ def main(page: ft.Page):
     
     # Build the UI
     page.add(
-        ft.Container(
+        App(
             ft.Column([
                 # Header
                 ft.Container(
@@ -278,10 +286,7 @@ def main(page: ft.Page):
                     padding=ft.Padding.only(top=20)
                 )
                 
-            ],horizontal_alignment=ft.CrossAxisAlignment.CENTER),
-            padding=ft.Padding.all(25),
-            alignment=ft.Alignment.TOP_CENTER,
-            bgcolor="#121212"
+            ],horizontal_alignment=ft.CrossAxisAlignment.CENTER)
         )
     )
 

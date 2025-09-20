@@ -40,7 +40,7 @@ async def capture_loop():
     global frame, last_reload, cursor_img
     with mss.mss() as sct:
         monitor = sct.monitors[config.MONITOR_INDEX]
-        while True:
+        while config.RUN:
             if time.time() - last_reload > reload_interval:
                 config.load_config()
                 monitor = sct.monitors[config.MONITOR_INDEX]

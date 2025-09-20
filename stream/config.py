@@ -8,6 +8,7 @@ MONITOR_INDEX = 1
 CURSOR_SIZE = 30
 PORT = 80
 CURSOR = "cursor1.png"
+RUN = True
 
 def load_config():
     global JPEG_QUALITY, TARGET_FPS, MONITOR_INDEX, CURSOR_SIZE, PORT, CURSOR

@@ -1,8 +1,7 @@
 import asyncio
-import cv2
+import cv2,sys
 from aiohttp import web
 from stream import streamer,config
-from stream.config import PORT
 from stream.helpers import get_local_ip
 
 async def mjpeg_handler(request):
@@ -14,7 +13,7 @@ async def mjpeg_handler(request):
     await response.prepare(request)
 
     try:
-        while True:
+        while config.RUN:
             if streamer.frame is None:
                 await asyncio.sleep(0.01)
                 continue
@@ -28,8 +27,10 @@ async def mjpeg_handler(request):
             await response.write(b"\r\n")
 
             await asyncio.sleep(1 / config.TARGET_FPS)
-    except (asyncio.CancelledError, ConnectionResetError):
-        pass
+    except (asyncio.CancelledError):
+        print('exiting...')
+        for i in asyncio.all_tasks():
+            i.cancel()
     finally:
         return response
 
@@ -39,11 +40,12 @@ async def stream_server():
     app.router.add_get("/", mjpeg_handler)
 
     runner = web.AppRunner(app)
+    ip = get_local_ip()
     await runner.setup()
-    site = web.TCPSite(runner, get_local_ip(), config.PORT)
+    site = web.TCPSite(runner, ip, config.PORT)
     await site.start()
+    
+    print(f"🚀 Server running at http://{ip}:{config.PORT}/")
 
-    print(f"🚀 Server running at http://0.0.0.0:{config.PORT}/")
-
-    while True:
+    while config.RUN:
         await asyncio.sleep(3600)
